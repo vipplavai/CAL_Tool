@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JSON Data Cleaner</title>
-    <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .checkbox-md {
@@ -12,45 +11,63 @@
             height: 20px;
             cursor: pointer;
         }
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow-y: auto; /* Make page scrollable */
+        }
+        .container {
+            max-width: 800px; /* Limit container width for better aesthetics */
+            margin: auto;
+            padding: 20px;
+        }
+        #meta-info-display {
+            display: none; /* Initially hidden */
+            font-size: 16px; /* Comfortable reading size */
+            padding: 20px;
+            background-color: #f4f4f4; /* Light grey background */
+            border-radius: 5px; /* Rounded corners */
+            margin-top: 20px;
+        }
+
     </style>
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
     <header class="bg-white shadow">
-        <div class="container mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h1 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Vipplav.ai CAL Tool <V1 class="5"></V1></h1>
+        <div class="container mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Vipplav.ai CAL Tool V1.6</h1>
+                <p id="user-file-info" class="text-lg text-gray-700 hidden"></p> <!-- Adjusted for better visibility -->
             </div>
+            <p id="timer-display" class="text-lg font-semibold text-gray-800">Time: 0.00s</p> <!-- Timer display -->
         </div>
     </header>
     
 
-    <div id="notification-container" class="fixed bottom-0 right-0 m-4 space-y-2"></div>
-
     <main class="container mx-auto p-4 sm:p-8">
-        <div class="bg-white shadow-md rounded px-4 sm:px-8 pt-6 pb-8 mb-4">
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="file-upload">
-                    Choose your json file
-                </label>
-                <input type="file" id="file-upload" name="file-upload"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                <button id="upload-button"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2">
-                    Upload
-                </button>
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <div class="user-info">
+                <input type="text" id="user-name" placeholder="Enter your name" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <input type="file" id="file-upload" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <button id="upload-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Upload</button>
             </div>
+            <p id="user-file-info" class="hidden"></p>
+            
+    
+
             <div id="content-area" class="mb-4 hidden">
+                <!-- Title and Open Page Button -->
                 <div class="mb-4">
                     <p id="title-top" class="text-gray-700 text-sm font-bold mb-2">Title: -</p>
-                    <button id="open-page-button-top"
-                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    <button id="open-page-button-top" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                         Open Page
                     </button>
                 </div>
-                <div class="mb-4">
-                    <p class="text-gray-700 text-sm font-bold mb-2">CONTENT:</p>
-                    <div id="content-list" class="mb-4">
-                    </div>
+
+                <!-- Content List and Actions -->
+                <div id="content-list" class="mb-4">
                 </div>
+
                 <div class="flex items-center justify-between mb-4">
                     <button id="delete-button"
                         class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
@@ -74,28 +91,25 @@
                         Open Page
                     </button>
                 </div>
+
+                <!-- Category and Sentiment Dropdowns -->
                 <div id="dropdowns" class="flex flex-col sm:flex-row justify-between items-center mb-4">
                     <div class="flex flex-col mb-4 sm:mb-0">
                         <label for="category" class="text-gray-700 text-sm font-bold mb-2">Category:</label>
-                        <select id="category" name="category" class="bg-white shadow border rounded py-2 px-3 w-full">
+                        <select id="category" name="category" class="bg-white shadow border rounded py-2 px-3 w-full" onchange="updateTags();">
                             <option value="">Select a category</option>
-                            <option value="">General</option>
                             <option value="Story">Story</option>
                             <option value="Politics">Politics</option>
-                            <option value="Health and lifestyle">Health and lifestyle</option>
+                            <option value="Health and Lifestyle">Health and lifestyle</option>
                             <option value="Sports">Sports</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Nature and Animals">Nature and Animals</option>
+                            <option value="Education and Jobs">Education and Jobs</option>
                             <option value="Finance and Business">Finance and Business</option>
                             <option value="Spiritual">Spiritual</option>
-                            <option value="Technology and space">Technology and space</option>
-                            <option value="Entertainment">Entertainment</option>
+                            <option value="Technology and Space">Technology and Space</option>
                             <option value="Crime">Crime</option>
-                            <option value="Medicine">Medicine</option>
-                            <option value="Unique">Unique</option>
-                            <option value="Nature and animals">Nature and animals</option>
-                            <option value="Foregin affiars">Forgien affiars</option>
-                            <option value="Motivation">Motivation</option>
-                            <option value="Education and Jobs">Education and Jobs</option>
-
+                            <option value="Foreign Affairs">Foreign Affairs</option>
                             <!-- ...other options... -->
                         </select>
                     </div>
@@ -109,228 +123,587 @@
                         </select>
                     </div>
                 </div>
-                
+
+                <!-- Tags Selection based on Category -->
+                <div class="mb-4">
+                    <label for="tags" class="text-gray-700 text-sm font-bold mb-2">Tags:</label>
+                    <div id="tags-container" class="flex flex-wrap">
+                        <!-- Tags will be dynamically added here based on the category -->
+                    </div>
+                    <input type="text" id="new-tag" placeholder="Add a tag" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-2">
+                    <button id="add-tag-button" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2">
+                        Add Tag
+                    </button>
+                </div>
+
+                <!-- Navigation Buttons -->
                 <div class="flex items-center justify-between">
-                    <button id="previous-button"
-                        class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    <button id="previous-button" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                         Previous
                     </button>
-                    <button id="save-and-next-button"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    <button id="save-and-next-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                         Save and Next
                     </button>
                 </div>
-                    <button id="download-button"
-                        class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline absolute top-0 right-0 m-4">
-                        Download Results
-                    </button>
+                <button id="download-button" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline absolute top-0 right-0 m-4">
+                    Download Results
+                </button>
+
             </div>
+        </div>
+         <!-- Meta information display section -->
+        <div id="meta-info-display" style="display: none;">
+            <!-- Meta information will be displayed here -->
         </div>
     </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let originalFileName = '';
-    
-            document.getElementById('upload-button').addEventListener('click', function() {
-                const fileInput = document.getElementById('file-upload');
-                if (fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    originalFileName = file.name.split('.').slice(0, -1).join('.');
-    
-                    const fileReader = new FileReader();
-                    fileReader.onload = function(e) {
-                        const content = JSON.parse(e.target.result);
-                        window.currentItemIndex = 0;
-                        window.jsonContent = content.map(item => ({...item, saved: false, skipped: false}));
-                        displayItem(window.currentItemIndex);
-                    };
-                    fileReader.readAsText(file);
+            let timerInterval;
+            let startTime;
+            let totalTimes = [];
+
+            function startTimer() {
+                startTime = new Date();
+                if (!timerInterval) {
+                    timerInterval = setInterval(function() {
+                        const elapsedTime = ((new Date()) - startTime) / 1000;
+                        document.getElementById('timer-display').textContent = `Time: ${elapsedTime.toFixed(2)}s`;
+                    }, 100);
                 }
-            });
+            }
+
+            function stopTimer() {
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null; // Make sure to clear the interval ID
+                    const timeTaken = ((new Date()) - startTime) / 1000;
+                    totalTimes.push(timeTaken);
+                    document.getElementById('timer-display').textContent = `Time: ${timeTaken.toFixed(2)}s (stopped)`;
+                }
+            }
+
+            const categoriesToTags = {
+                "Story": ["Adventure", "Fairy Tale", "Historical"],
+                "Health and Lifestyle": ["Nutrition", "Mental Health", "Exercise", "Medical Advances", "Wellness", "Public Health", "Lifestyle Changes", "Self-care", "Health issues", "Tips", "Fruits", "Women Health", "Weight Loss", "Medicine", "Precautions"],
+                "Entertainment": ["Movies", "Music", "Television", "Celebrity News", "Theater", "Arts", "Pop Culture", "Streaming Services"],
+                "Nature and Animals": ["Wildlife", "Environmental Conservation", "Climate Change", "Endangered Species", "Natural Disasters", "Ecology", "Animal Behavior"],
+                "Education and Jobs": ["Career Development", "Educational Technology", "Higher Education", "Job Market", "Vocational Training", "Scholarships", "Remote Learning", "Teaching Methods"],
+                "Finance and Business": ["Markets", "Economy", "Startups", "Investments", "Corporate News", "Trading", "Financial Planning", "Gold price", "Silver Price", "UPI", "RBI", "SEBI", "NIFTY", "Offers/Discounts", "Layoffs", "Automobiles", "GST", "Income Tax", "Banks", "CIBIL", "Cards"],
+                "Sports": ["Football", "Cricket", "Basketball", "Tennis", "Olympics", "Athlete Profiles", "Sports Medicine", "Fitness", "IPL"],
+                "Politics": ["Elections", "Legislation", "Governance", "Political Parties", "Policies", "Civil Rights", "International Relations", "Political Crises"],
+                "Spiritual": ["Meditation", "Religious Practices", "Philosophical Thoughts"],
+                "Technology and Space": ["Artificial Intelligence", "Robotics", "Space Exploration", "Biotechnology", "Cybersecurity", "Gadgets", "Software Development", "Tech Industry", "ISRO", "NASA", "Mobiles"],
+                "Crime": ["Law Enforcement", "Legal Trials", "Crime Prevention", "Unsolved Cases", "Forensic Science", "Criminal Profiles", "Public Safety", "Cybercrime", "Physical Abuse", "knives", "Molesting", "Investigation", "Accident", "Acid Attack", "Suicide", "Smuggling", "Drugs", "Shooting", "Frauds"],
+                "Foreign Affairs": ["Diplomacy", "Global Conflicts", "Treaties"]
+                // Predefined categories and their tags
+            };
+            const customTags = []; // Array to store custom tags
+        
+            
+            const uploadButton = document.getElementById('upload-button');
+            if (uploadButton) {
+                uploadButton.addEventListener('click', function() {
+                    const userName = document.getElementById('user-name').value.trim();
+                    const fileInput = document.getElementById('file-upload');
+                    if (fileInput.files.length > 0) {
+                        const file = fileInput.files[0];
+                        document.getElementById('user-file-info').textContent = `${userName} - ${file.name}`;
+                        document.getElementById('user-file-info').classList.remove('hidden');
+                        document.querySelector('.user-info').classList.add('hidden');
+                        let originalFileName = file.name.split('.').slice(0, -1).join('.'); // Define the filename here
     
+                        // Declare and define the fileReader within the same block
+                        const fileReader = new FileReader();
+    
+                        fileReader.onload = function(e) {
+                            try {
+                                const content = JSON.parse(e.target.result);
+                                window.currentItemIndex = 0;
+                                window.jsonContent = content.map(item => ({
+                                    ...item,
+                                    saved: false,
+                                    skipped: false,
+                                    tags: item.tags || [],
+                                    originalContent: JSON.parse(JSON.stringify(item.content)),
+                                    originalTags: item.tags ? [...item.tags] : [],
+                                    originalSentiment: item.sentiment || ""
+                                }));
+                                displayItem(window.currentItemIndex);
+                            } catch (error) {
+                                console.error('Error parsing JSON:', error);
+                                alert('Failed to load JSON file: ' + error.message);
+                            }
+                        };
+
+
+    
+                        fileReader.readAsText(file); // Make sure this is called after defining the onload event
+                        startTimer();
+                    }
+                });
+            }
+    
+        
             function displayItem(index) {
                 const item = window.jsonContent[index];
                 if (!item) return;
 
                 if (!item.originalContent) {
-                    item.originalContent = JSON.parse(JSON.stringify(item.content));
+                    item.originalContent = JSON.parse(JSON.stringify(item.content)); // Deep copy of content
+                    item.originalTags = Array.isArray(item.tags) ? [...item.tags] : []; // Ensure it's an array
+                    item.originalSentiment = item.sentiment;
                 }
 
-                document.getElementById('title-top').textContent = `Item ${index + 1} of ${window.jsonContent.length}: ${item.title}`;
-                document.getElementById('title-bottom').textContent = `Item ${index + 1} of ${window.jsonContent.length}: ${item.title}`;
-                document.getElementById('open-page-button-top').onclick = () => window.open(item.href, '_blank');
-                document.getElementById('open-page-button-bottom').onclick = () => window.open(item.href, '_blank');
+                updateUI(item, index);
+            }
 
+
+        
+            function updateUI(item, index) {
+                const titleTop = document.getElementById('title-top');
+                const titleBottom = document.getElementById('title-bottom');
+                const openPageTop = document.getElementById('open-page-button-top');
+                const openPageBottom = document.getElementById('open-page-button-bottom');
                 const contentList = document.getElementById('content-list');
-    
-                // Clear existing content first
-                contentList.innerHTML = '';
-
-                // Create and prepend the "Select All" checkbox
-                const selectAllCheckbox = document.createElement('input');
-                selectAllCheckbox.type = 'checkbox';
-                selectAllCheckbox.id = 'select-all-checkbox';
-                selectAllCheckbox.className = 'checkbox-md';
-                selectAllCheckbox.addEventListener('change', function() {
-                    const checkboxes = document.querySelectorAll('.content-checkbox');
-                    checkboxes.forEach(checkbox => {
-                        checkbox.checked = this.checked;
-                    });
-                });
-
-                const selectAllLabel = document.createElement('label');
-                selectAllLabel.htmlFor = 'select-all-checkbox';
-                selectAllLabel.textContent = 'Select All';
-                selectAllLabel.className = 'mr-2'; // Adjust as needed
-
-                const selectAllDiv = document.createElement('div');
-                selectAllDiv.appendChild(selectAllCheckbox);
-                selectAllDiv.appendChild(selectAllLabel);
-                
-                contentList.prepend(selectAllDiv);
-
-                item.content.forEach((content, i) => {
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.className = 'checkbox-md content-checkbox'; // Ensure this matches the selector in the "Select All" listener
-                    checkbox.id = `checkbox-${index}-${i}`;
-
-                    const label = document.createElement('label');
-                    label.htmlFor = checkbox.id;
-                    label.textContent = content;
-                    label.className = 'ml-2'; // Adjust styling as needed
-
-                    const container = document.createElement('div');
-                    container.appendChild(checkbox);
-                    container.appendChild(label);
-
-                    contentList.appendChild(container);
-                });
-
-                document.getElementById('content-area').style.display = 'block';
-                document.getElementById('dropdowns').style.display = 'flex';
-
                 const categorySelect = document.getElementById('category');
-                categorySelect.value = item.category || "Story";
-
                 const sentimentSelect = document.getElementById('sentiment');
-                sentimentSelect.value = item.sentiment || "Neutral";
+    
+                if (titleTop && titleBottom && openPageTop && openPageBottom && contentList) {
+                    titleTop.textContent = `Item ${index + 1} of ${window.jsonContent.length}: ${item.title}`;
+                    titleBottom.textContent = titleTop.textContent;
+                    openPageTop.onclick = () => window.open(item.href, '_blank');
+                    openPageBottom.onclick = () => window.open(item.href, '_blank');
+                    renderContentList(item, contentList);
+    
+                    // Clear and update tags display
+                    clearTagsUI();
+                    loadTags(item.category, item.tags);
+    
+                    document.getElementById('content-area').style.display = 'block';
+                    document.getElementById('dropdowns').style.display = 'flex';
+                    categorySelect.value = item.category || "Story";
+                    sentimentSelect.value = item.sentiment || "Neutral";
                 }
-
-                document.getElementById('delete-button').addEventListener('click', function() {
-                const contentList = document.getElementById('content-list');
-                const checkboxes = contentList.querySelectorAll('input[type=checkbox]:not(#select-all-checkbox)'); // Select all except the Select All checkbox
-                const newContent = [];
-                const selectAllCheckbox = document.getElementById('select-all-checkbox');
-
-                // Iterate over checkboxes to determine which items to keep
-                checkboxes.forEach((checkbox, index) => {
-                    if (!checkbox.checked) {
-                        newContent.push(window.jsonContent[window.currentItemIndex].content[index]);
+    
+                const undoButton = document.getElementById('undo-button');
+                if (item.originalContent) {
+                    undoButton.disabled = false;
+                } else {
+                    undoButton.disabled = true;
+                }
+                clearTagsUI();
+                loadTags(item.category, item.tags); // Pass the current tags here
+            }
+            
+    
+            function loadTags(category, currentTags = []) { // Set default to an empty array if not provided
+                const tags = categoriesToTags[category] || [];
+                const tagsContainer = document.getElementById('tags-container');
+                tags.forEach(tag => {
+                    const isChecked = currentTags.includes(tag);
+                    const tagElement = createTagElement(tag, isChecked);
+                    tagsContainer.appendChild(tagElement);
+                });
+                // Handle custom tags not in predefined list
+                currentTags.forEach(tag => {
+                    if (!tags.includes(tag)) { // Only add if not already included
+                        const tagElement = createTagElement(tag, true);
+                        tagsContainer.appendChild(tagElement);
                     }
                 });
-
-                // Update the content for the current item and reset the Select All checkbox
-                window.jsonContent[window.currentItemIndex].content = newContent;
-                selectAllCheckbox.checked = false; // Reset Select All checkbox
-
-                // Re-display the item to update the UI
-                displayItem(window.currentItemIndex);
-                });
+            }
 
 
-                document.getElementById('save-and-next-button').addEventListener('click', function() {
-                const currentItem = window.jsonContent[window.currentItemIndex];
-                currentItem.category = document.getElementById('category').value;
-                currentItem.sentiment = document.getElementById('sentiment').value;
-                currentItem.saved = true;
-                window.currentItemIndex++;
-                if (window.currentItemIndex < window.jsonContent.length) {
-                    displayItem(window.currentItemIndex);
-                    notify('Item saved, moving to next.', 'bg-green-500');
+
+    
+            function updateTags() {
+                const category = document.getElementById('category').value;
+                clearTagsUI();
+                loadTags(category);
+            }
+    
+    
+            function clearTagsUI() {
+                const tagsContainer = document.getElementById('tags-container');
+                if (tagsContainer) {
+                    tagsContainer.innerHTML = ''; // Clear all child elements
                 } else {
-                    notify('No more items to display.', 'bg-orange-500');
+                    console.error('Tags container not found');
                 }
+            }
+    
+    
+             
+            
+        
+            function renderContentList(item, contentList) {
+                contentList.innerHTML = '';
+        
+                const selectAllCheckbox = createSelectAllCheckbox();
+                contentList.appendChild(selectAllCheckbox.div);
+        
+                item.content.forEach((content, i) => {
+                    const contentCheckbox = createContentCheckbox(content, i, item);
+                    contentList.appendChild(contentCheckbox);
                 });
-
-                document.getElementById('previous-button').addEventListener('click', function() {
-                if (window.currentItemIndex > 0) {
-                    window.currentItemIndex--;
-                    displayItem(window.currentItemIndex);
-                    notify('Moved to previous item.', 'bg-blue-500');
-                }
+            }
+        
+            function createSelectAllCheckbox() {
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'checkbox-md';
+                checkbox.id = 'select-all-checkbox';
+                checkbox.addEventListener('change', () => {
+                    document.querySelectorAll('.content-checkbox').forEach(cb => cb.checked = checkbox.checked);
                 });
+        
+                const label = document.createElement('label');
+                label.htmlFor = 'select-all-checkbox';
+                label.textContent = 'Select All';
+                label.className = 'mr-2';
+        
+                const div = document.createElement('div');
+                div.appendChild(checkbox);
+                div.appendChild(label);
+        
+                return { checkbox, label, div };
+            }
+        
+            function createContentCheckbox(content, index, item) {
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'checkbox-md content-checkbox';
+                checkbox.id = `checkbox-${index}-${index}`;
+        
+                const label = document.createElement('label');
+                label.htmlFor = checkbox.id;
+                label.textContent = content;
+                label.className = 'ml-2';
+        
+                const container = document.createElement('div');
+                container.appendChild(checkbox);
+                container.appendChild(label);
+        
+                return container;
+            }
+        
+            window.updateTags = function() {
+                const category = document.getElementById('category').value;
+                clearTagsUI();
+                loadTags(category);
+            };
+    
+        
+            function addNewTag() {
+                // alert("Add tag function triggered!");  // Simple alert to confirm function is triggered
+                const newTagInput = document.getElementById('new-tag');
+                const newTag = newTagInput.value.trim();
+                console.log("Attempting to add new tag:", newTag); // Debugging output
 
-                document.getElementById('skip-button').addEventListener('click', function() {
-                window.jsonContent[window.currentItemIndex].skipped = true;
-                window.currentItemIndex++;
-                if (window.currentItemIndex < window.jsonContent.length) {
-                    displayItem(window.currentItemIndex);
-                    notify('Item skipped.', 'bg-yellow-500');
+                if (newTag) {     
+                    const tagsContainer = document.getElementById('tags-container');
+                    // Debug existing tags retrieval
+                    const existingTags = Array.from(tagsContainer.querySelectorAll('.checkbox-md')).map(input => input.value);
+                    console.log("Existing tags:", existingTags); // Debugging output
+
+                    if (!existingTags.includes(newTag)) {
+                        const tagElement = createTagElement(newTag, true);
+                        tagsContainer.appendChild(tagElement);
+                        newTagInput.value = '';
+                        console.log("Tag added successfully:", newTag); // Debugging output
+                    } else {
+                        console.error("Tag already exists:", newTag); // Debugging output
+                    }
                 } else {
-                    notify('No more items to display.', 'bg-orange-500');
+                    console.error("No input for new tag."); // Debugging output
                 }
-                });
-                
-                document.getElementById('undo-button').addEventListener('click', function() {
-                undoChanges();
-                });
+            }
 
+            const addTagButton = document.getElementById('add-tag-button');
+                if (addTagButton) {
+                    addTagButton.addEventListener('click', addNewTag);
+                    console.log("Add tag event listener confirmed attached."); // Confirm attachment
+                } else {
+                    console.error("Add tag button not found."); // Error if button not found
+                }
             
 
-                document.getElementById('download-button').addEventListener('click', function() {
-                // Filter out 'saved' items and remove 'originalContent' from each item
-                const cleanedData = window.jsonContent.filter(item => item.saved).map(item => {
-                    const {originalContent, ...cleanedItem} = item; // Destructure to exclude originalContent
-                    return cleanedItem;
-                });
+    
+    
+        
+            function updateCustomTagsDisplay(tag) {
+                const tagsContainer = document.getElementById('tags-container');
+                const tagElement = createTagElement(tag);
+                tagsContainer.appendChild(tagElement.div);
+            }
+        
+            function createTagElement(tag, isChecked) {
+                const div = document.createElement('div');
+                div.className = 'tag-item';
 
-                // Optional: If you want to include skipped items in a separate file, apply similar logic to remove 'originalContent'
-                const skippedData = window.jsonContent.filter(item => item.skipped).map(item => {
-                    const {originalContent, ...skippedItem} = item;
-                    return skippedItem;
-                });
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'checkbox-md';
+                checkbox.id = `tag-${tag}`;
+                checkbox.value = tag;
+                checkbox.checked = isChecked;
 
-                downloadJSON(cleanedData, `cleaned_${originalFileName}.json`);
-                downloadJSON(skippedData, `skipped_items_${originalFileName}.json`);
-                });
+                const label = document.createElement('label');
+                label.htmlFor = checkbox.id;
+                label.textContent = tag;
+                label.className = 'ml-2 mr-4';
 
-                function downloadJSON(data, filename) {
+                div.appendChild(checkbox);
+                div.appendChild(label);
+
+                return div; // Ensure this returns the div element
+            }
+
+            document.getElementById('previous-button').addEventListener('click', function() {
+                if (window.currentItemIndex > 0) {
+                    saveCurrentTags(window.currentItemIndex);  // Correct usage of current index
+                    saveCurrentItem(); // Assuming this function handles marking the item as saved
+                    window.currentItemIndex--;
+                    displayItem(window.currentItemIndex);
+                }
+            });
+
+            document.getElementById('save-and-next-button').addEventListener('click', function() {
+                stopTimer(); // Stop and record the current time
+                if (window.currentItemIndex < window.jsonContent.length - 1) {
+                    saveCurrentItem(); // Save the current item
+                    window.currentItemIndex++;
+                    displayItem(window.currentItemIndex);
+                    startTimer(); // Restart the timer for the new item
+                } else {
+                    notify("No more items to display.", "bg-orange-500");
+                }
+            });
+
+
+
+    
+            document.getElementById('delete-button').addEventListener('click', function() {
+            const checkboxes = document.querySelectorAll('.content-checkbox');
+            const newContent = [];
+            checkboxes.forEach((checkbox, index) => {
+                if (!checkbox.checked) {
+                    newContent.push(window.jsonContent[window.currentItemIndex].content[index]);
+                }
+            });
+            window.jsonContent[window.currentItemIndex].content = newContent;
+            displayItem(window.currentItemIndex); // Redraw the content list
+            });
+    
+            function undoChanges() {
+                const currentItem = window.jsonContent[window.currentItemIndex];
+                if (currentItem && currentItem.originalContent) {
+                    // Revert the content to the originally loaded content
+                    currentItem.content = JSON.parse(JSON.stringify(currentItem.originalContent));
+                    currentItem.tags = currentItem.originalTags ? [...currentItem.originalTags] : [];  // Assuming original tags are stored
+                    currentItem.sentiment = currentItem.originalSentiment;  // Assuming original sentiment is stored
+
+                    displayItem(window.currentItemIndex); // Redisplay the item with original content
+                } else {
+                    console.error("No original content available to restore.");
+                    notify('No original content to restore.', 'bg-red-500');
+                }
+            }
+
+    
+            function resetFormElements() {
+                // Reset category and sentiment dropdowns
+                const categorySelect = document.getElementById('category');
+                const sentimentSelect = document.getElementById('sentiment');
+                if (categorySelect && sentimentSelect && window.jsonContent[window.currentItemIndex]) {
+                    categorySelect.value = window.jsonContent[window.currentItemIndex].category || "";
+                    sentimentSelect.value = window.jsonContent[window.currentItemIndex].sentiment || "Neutral";
+                }
+    
+                // Clear any custom tags input
+                document.getElementById('new-tag').value = "";
+    
+                // Reset checkboxes
+                document.querySelectorAll('.content-checkbox').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+    
+                // Update tags for the current category
+                updateTags();
+            }
+    
+            document.getElementById('undo-button').addEventListener('click', undoChanges);
+    
+    
+            document.getElementById('skip-button').addEventListener('click', function() {
+                stopTimer(); // Stop and record the current time
+                if (window.currentItemIndex < window.jsonContent.length) {
+                    window.jsonContent[window.currentItemIndex].skipped = true; // Mark the item as skipped
+                    window.currentItemIndex++;
+                    if (window.currentItemIndex < window.jsonContent.length) {
+                        displayItem(window.currentItemIndex);
+                        startTimer(); // Restart the timer for the new item
+                    } else {
+                        alert('No more items to display.');
+                    }
+                }
+            });
+
+            
+            function saveCurrentTags(index) {
+                // Retrieve the item from window.jsonContent array using the index
+                const item = window.jsonContent[index];
+                const tagsContainer = document.getElementById('tags-container');
+
+                // Make sure to check that item and tagsContainer are valid before proceeding
+                if (item && tagsContainer) {
+                    item.tags = Array.from(tagsContainer.querySelectorAll('input[type="checkbox"]:checked'))
+                                    .map(input => input.value);
+                } else {
+                    console.error("Failed to find the item or tags container for index:", index);
+                }
+            }
+
+
+            function saveCurrentItem() {
+                const currentItem = window.jsonContent[window.currentItemIndex];
+                updateItemTagsAndContent(currentItem); // Update tags and content
+                currentItem.saved = true; // Mark the item as saved
+            }
+
+
+
+
+            function updateItemTagsAndContent(item) {
+                // Tags update
+                const tagsContainer = document.getElementById('tags-container');
+                const selectedTags = Array.from(tagsContainer.querySelectorAll('input[type="checkbox"]:checked'))
+                                        .map(cb => cb.value);
+                item.tags = selectedTags;
+
+                // Sentiment update
+                const sentimentSelect = document.getElementById('sentiment');
+                item.sentiment = sentimentSelect.value;
+
+                // Category update
+                const categorySelect = document.getElementById('category');
+                item.category = categorySelect.value; // Ensure the category is updated
+            }
+
+            function notify(message, className = 'bg-blue-500') {
+                const notification = document.createElement('div');
+                notification.className = `text-white px-4 py-2 rounded ${className} mb-2`;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 3000); // Remove the notification after 3 seconds
+            }
+    
+    
+            function downloadJSON(data, filename) {
                 const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = filename;
-                document.body.appendChild(a);
                 a.click();
-                document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-                notify(`Downloading ${filename}...`, 'bg-purple-500');
-                }
+            }
 
-                function undoChanges() {
-                const currentItem = window.jsonContent[window.currentItemIndex];
-                if (currentItem.originalContent) {
-                    // Revert content to originalContent
-                    currentItem.content = JSON.parse(JSON.stringify(currentItem.originalContent));
-                    displayItem(window.currentItemIndex);
-                    notify('Changes undone, original content restored.', 'bg-gray-500');
-                    }
-                }
-
-
-                function notify(message, className = 'bg-blue-500') {
-                const notification = document.createElement('div');
-                notification.className = `text-white px-4 py-2 rounded ${className} mb-2`;
-                notification.textContent = message;
-                const container = document.getElementById('notification-container');
-                container.appendChild(notification);
-                setTimeout(() => notification.remove(), 2000);
-                }
+            function hideAllExceptHeaderAndMetaInfo() {
+                // Hide all elements in the main section
+                document.querySelectorAll('main > div').forEach(element => {
+                    element.style.display = 'none';
                 });
-                </script>
+
+                // Ensure the meta info display area is visible
+                const metaDisplay = document.getElementById('meta-info-display');
+                if (metaDisplay) {
+                    metaDisplay.style.display = 'block'; // Make sure this element is visible
+                }
+            }
+
+            function downloadMetaInfo() {
+                const totalTime = totalTimes.reduce((a, b) => a + b, 0);
+                const averageTime = totalTime / totalTimes.length;
+                const skippedItemsDetails = window.jsonContent.filter(item => item.skipped).map(item => ({
+                    title: item.title,
+                    href: item.href,
+                    content: item.content,
+                    category: item.category,
+                    tags: item.tags,
+                    sentiment: item.sentiment
+                }));
+
+                const metaInfo = {
+                    userName: document.getElementById('user-name').value,
+                    fileName: document.getElementById('file-upload').files[0].name,
+                    totalTime: totalTime,
+                    averageTime: averageTime,
+                    completionStatus: window.currentItemIndex === window.jsonContent.length - 1 ? "Complete" : "Incomplete",
+                    numberOfArticlesWorked: window.jsonContent.filter(item => item.saved).length,
+                    numberOfArticlesLeft: window.jsonContent.length - window.currentItemIndex - 1,
+                    skippedItems: skippedItemsDetails.length,
+                    skippedItemsDetails: skippedItemsDetails  // Detailed info, but won't be displayed in the UI.
+                };
+
+                const blob = new Blob([JSON.stringify(metaInfo, null, 2)], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `meta_info_${document.getElementById('file-upload').files[0].name}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+
+                // Display summary of meta info without showing detailed skipped items
+                displayMetaInfo(metaInfo);
+            }
+
+            function displayMetaInfo(metaInfo) {
+                const displayDiv = document.getElementById('meta-info-display');
+                const displayInfo = {
+                    userName: metaInfo.userName,
+                    fileName: metaInfo.fileName,
+                    totalTime: metaInfo.totalTime,
+                    averageTime: metaInfo.averageTime,
+                    completionStatus: metaInfo.completionStatus,
+                    numberOfArticlesWorked: metaInfo.numberOfArticlesWorked,
+                    numberOfArticlesLeft: metaInfo.numberOfArticlesLeft,
+                    skippedItems: metaInfo.skippedItems
+                };
+
+                // Show only the summary without skipped items details
+                displayDiv.innerHTML = `<pre>${JSON.stringify(displayInfo, null, 2)}</pre>`;
+                displayDiv.style.display = 'block';
+            }
+
+            document.getElementById('download-button').addEventListener('click', function() {
+                stopTimer();
+                downloadMetaInfo();
+                const cleanedData = window.jsonContent.filter(item => item.saved).map(item => {
+                    const {originalContent, originalTags, ...cleanedItem} = item; // Remove fields not required in the cleaned data
+                    return cleanedItem;
+                });
+
+                if (cleanedData.length > 0) {
+                    downloadJSON(cleanedData, `cleaned_${document.getElementById('file-upload').files[0].name}.json`);
+                } else {
+                    alert("No cleaned data to download.");
+                }
+
+                // Call function to hide elements and show only the necessary information
+                hideAllExceptHeaderAndMetaInfo();
+
+            })
+            });
+
+        </script>
+        
+        
+        
 
 </body>
 
 </html>
+        
