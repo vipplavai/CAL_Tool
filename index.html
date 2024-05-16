@@ -36,7 +36,7 @@
     <header class="bg-white shadow">
         <div class="container mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <div>
-                <h1 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Vipplav.ai CAL Tool V1.6</h1>
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4">Vipplav.ai CAL Tool V2.0</h1>
                 <p id="user-file-info" class="text-lg text-gray-700 hidden"></p> <!-- Adjusted for better visibility -->
             </div>
             <p id="timer-display" class="text-lg font-semibold text-gray-800">Time: 0.00s</p> <!-- Timer display -->
@@ -98,6 +98,7 @@
                         <label for="category" class="text-gray-700 text-sm font-bold mb-2">Category:</label>
                         <select id="category" name="category" class="bg-white shadow border rounded py-2 px-3 w-full" onchange="updateTags();">
                             <option value="">Select a category</option>
+                            <option value="General">General</option>
                             <option value="Story">Story</option>
                             <option value="Politics">Politics</option>
                             <option value="Health and Lifestyle">Health and lifestyle</option>
@@ -185,6 +186,7 @@
             }
 
             const categoriesToTags = {
+                "General": ["Current Events", "Local News", "National News", "Breaking News", "Community", "Elections", "Weather", "Health Updates", "Economic News", "Technology Trends", "Cultural Events", "Education News", "Traffic and Safety"],
                 "Story": ["Adventure", "Fairy Tale", "Historical"],
                 "Health and Lifestyle": ["Nutrition", "Mental Health", "Exercise", "Medical Advances", "Wellness", "Public Health", "Lifestyle Changes", "Self-care", "Health issues", "Tips", "Fruits", "Women Health", "Weight Loss", "Medicine", "Precautions"],
                 "Entertainment": ["Movies", "Music", "Television", "Celebrity News", "Theater", "Arts", "Pop Culture", "Streaming Services"],
